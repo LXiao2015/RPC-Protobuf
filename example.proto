@@ -1,13 +1,17 @@
-syntax = "proto3";
+// proto 文件的注释方法类似于 C++
 
-message SearchRequest {
-    string Request = 1;
+syntax = "proto3";    // 在第一行必须指明使用版本
+
+message SearchRequest {    // 定义 SearchRequest 报文(message)格式
+    string Request = 1;    // 字段类型 字段名 = 域号
 }
 
-message SearchResponse {
-    string Response = 2;
+message SearchResponse {    // 定义 SearchResponse 报文格式
+    string Response = 2;    // 字段类型 字段名 = 域号
 }
 
-service SearchService {
+service SearchService {    // 定义 SearchService 报文格式
+    // 定义 rpc 接口
+	// 请求由 SearchRequest 结构体定义, 回复由 SearchResponse 结构体定义
     rpc Search (SearchRequest) returns (SearchResponse);
 }
