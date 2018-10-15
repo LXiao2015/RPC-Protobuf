@@ -20,21 +20,23 @@ public:
         SearchRequest request;
         request.set_request(user);
 
-        SearchResponse reply;
-
         ClientContext context;
 
+        // 初始化 RPC 并为之创建句柄, 将 RPC 绑定到一个 CompletionQueue
         CompletionQueue cq;
-
-        Status status;
-
         std::unique_ptr<ClientAsyncResponseReader<SearchResponse> > rpc(stub_->AsyncSearch(&context, request, &cq));
 
+        Status status;
+        SearchResponse reply;
+        
+        // 用一个唯一的标签，寻求回答和最终的状态
         rpc->Finish(&reply, &status, (void*)1);
+        
+        // 等待完成队列返回下一个标签, 当标签被传入对应的 Finish() 调用时, 回答和状态就可以被返回了
         void* got_tag;
         bool ok = false;
-
         GPR_ASSERT(cq.Next(&got_tag, &ok));
+        
         GPR_ASSERT(got_tag == (void*)1);
         GPR_ASSERT(ok);
 
